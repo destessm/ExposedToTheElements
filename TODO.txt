@@ -1,0 +1,23 @@
+Order of operations: 
+ [X] character moves, has health (and simple sprite)
+ [X] types exists
+ [ ] character attacks
+ [ ] enemy with associated type, doesn't move
+ [ ] enemy attacks with typed damage (projectiles)
+ [ ] character has one axis (fire/water) of immunity that can be set
+ [ ] character can take typed damage
+ [X] button to swap immunities (once they're set)
+ [ ] pickups that trigger something
+ [ ] enemy drops pickups
+ [ ] pickup triggers immunity axis
+ --- 
+ [ ] Add AI movement of some kind (intermittent random movement??)
+ --- 
+ [ ] add a second axis of immunity (Air/Earth)
+ [ ] enemies with types assoiated with air/earth
+ --- 
+ [ ] add a second tier of enemy with scarier attacks for all elements
+ --- 
+ [ ] add walls and collision vs enemy/player/projectiles
+ [ ] enemy AI improvement (don't run into walls)?
+ [ ] 

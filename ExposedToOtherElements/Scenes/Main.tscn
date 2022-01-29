@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Scripts/Main.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/Mob.tscn" type="PackedScene" id=3]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 192, 320, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0 )
+}
+
+[node name="Main" type="Node"]
+script = ExtResource( 1 )
+Mob = ExtResource( 3 )
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+
+[node name="MobTimer" type="Timer" parent="."]
+
+[node name="StartPosition" type="Position2D" parent="."]
+position = Vector2( 573, 297 )
+
+[node name="MobPath" type="Path2D" parent="."]
+position = Vector2( 58, 64 )
+scale = Vector2( 1.79687, 1.36875 )
+curve = SubResource( 1 )
+
+[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath"]
+
+[connection signal="killed" from="Player" to="." method="_on_Player_killed"]
+[connection signal="timeout" from="MobTimer" to="." method="_on_MobTimer_timeout"]
