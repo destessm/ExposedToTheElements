@@ -13,14 +13,27 @@ _global_script_classes=[ {
 "class": "Elements",
 "language": "GDScript",
 "path": "res://Scripts/Elements.gd"
+}, {
+"base": "Area2D",
+"class": "Mob",
+"language": "GDScript",
+"path": "res://Scripts/Mob.gd"
+}, {
+"base": "RigidBody2D",
+"class": "Projectile",
+"language": "GDScript",
+"path": "res://Scripts/Projectile.gd"
 } ]
 _global_script_class_icons={
-"Elements": ""
+"Elements": "",
+"Mob": "",
+"Projectile": ""
 }
 
 [application]
 
 config/name="Exposed To Other Elements"
+run/main_scene="res://Scenes/Main.tscn"
 config/icon="res://icon.png"
 
 [physics]

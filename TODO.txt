@@ -1,10 +1,11 @@
 Order of operations: 
  [X] character moves, has health (and simple sprite)
  [X] types exists
- [ ] character attacks
- [ ] enemy with associated type, doesn't move
- [ ] enemy attacks with typed damage (projectiles)
- [ ] character has one axis (fire/water) of immunity that can be set
+ [X] mouse aiming
+ [X] character attacks (projectile?)
+ [X] enemy with associated type, doesn't move
+ [X] enemy attacks with typed damage (projectiles)
+ [X] character has one axis (fire/water) of immunity that can be set
  [ ] character can take typed damage
  [X] button to swap immunities (once they're set)
  [ ] pickups that trigger something

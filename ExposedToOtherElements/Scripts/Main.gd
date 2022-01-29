@@ -2,16 +2,11 @@ extends Node
 
 export (PackedScene) var Mob
 var score
+var rng = RandomNumberGenerator.new()
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	randomize()
+	rng.randomize()
 	new_game()
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
 
 func _on_Player_killed():
 	$MobTimer.stop()
@@ -22,12 +17,40 @@ func new_game():
 	$MobTimer.start()
 
 
-func _on_MobTimer_timeout():
-	print("mob timout")
+func _on_MobTimer_timeout(): #probably keep track of how many mobs are on screen
+#	print("mob timout")
 	# Choose a random location on Path2D.
-	$MobPath/MobSpawnLocation.offset = randi()
+	$MobPath/MobSpawnLocation.offset = rng.randi()
 	# Create a Mob instance and add it to the scene.
 	var mob = Mob.instance()
 	add_child(mob)
+	mob.start(decide_which_mob_type(1))
 	# Set the mob's position to a random location.
 	mob.position = $MobPath/MobSpawnLocation.position
+
+func decide_which_mob_type(num_axes):
+	var max_elem = 2
+	match num_axes:
+		1:
+			max_elem = 2
+		2:
+			max_elem = 4
+#		3:
+#			max_elem = 6
+#		4:
+#			max_elem = 8
+	var num = rng.randi_range(1,max_elem)
+	match num:
+		1:
+			return Elements.type.FIRE
+		2:
+			return Elements.type.WATER
+		3:
+			return Elements.type.AIR
+		4:
+			return Elements.type.EARTH
+
+func _on_Mob_defeated():
+	score += 1
+	print("score is " + str(score))
+	pass # Replace with function body.
