@@ -6,19 +6,35 @@ Order of operations:
  [X] enemy with associated type, doesn't move
  [X] enemy attacks with typed damage (projectiles)
  [X] character has one axis (fire/water) of immunity that can be set
- [ ] character can take typed damage
+ [X] character can take typed damage
  [X] button to swap immunities (once they're set)
- [ ] pickups that trigger something
- [ ] enemy drops pickups
- [ ] pickup triggers immunity axis
+ [X] pickups that trigger something
+ [X] enemy drops pickups
+ [X] pickup triggers immunity axis
+ [X] UI for health
+ [X] UI for elemental axes
+ [ ] actually reasonable AI spawn placement
  --- 
  [ ] Add AI movement of some kind (intermittent random movement??)
  --- 
- [ ] add a second axis of immunity (Air/Earth)
- [ ] enemies with types assoiated with air/earth
+ [X] add a second axis of immunity (Air/Earth)
+ [X] enemies with types assoiated with air/earth
  --- 
  [ ] add a second tier of enemy with scarier attacks for all elements
  --- 
  [ ] add walls and collision vs enemy/player/projectiles
  [ ] enemy AI improvement (don't run into walls)?
  [ ] 
+
+---------------------------------------------------------------------------
+
+list of TODOs as of Saturday night:
+ [ ] AI spawn placement
+ [ ] start and end screens (and game restarting)
+ [ ] sfx
+ [ ] music
+ [ ] export to html5
+ ---
+stretch goals
+ [ ] AI movement
+ [ ] screen resolution (will it resize okay?)

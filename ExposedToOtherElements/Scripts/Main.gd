@@ -1,8 +1,13 @@
 extends Node
 
+signal score(value)
+
 export (PackedScene) var Mob
+export var score_to_advance = 10
+var max_enemies = [6,10,14,18]
 var score
 var rng = RandomNumberGenerator.new()
+var num_axes
 
 func _ready():
 	rng.randomize()
@@ -10,23 +15,45 @@ func _ready():
 
 func _on_Player_killed():
 	$MobTimer.stop()
+	for pickup in $Pickups.get_children():
+		pickup.destroy()
+	for projectile in $Projectiles.get_children():
+		projectile.destroy(false)
+	for mob in $Mobs.get_children():
+		mob.destroy(false)
 	
 func new_game():
 	score = 0
+	num_axes = 1
 	$Player.start($StartPosition.position)
 	$MobTimer.start()
+	emit_signal("score", score)
 
+#func _input(event):
+#	if event.is_action("ui_accept"):
+#		$MobPath/MobSpawnLocation.offset = rng.randi()
+#		spawn_mob($MobPath/MobSpawnLocation.position, decide_which_mob_type(1))
 
-func _on_MobTimer_timeout(): #probably keep track of how many mobs are on screen
-#	print("mob timout")
-	# Choose a random location on Path2D.
-	$MobPath/MobSpawnLocation.offset = rng.randi()
-	# Create a Mob instance and add it to the scene.
+func _on_MobTimer_timeout(): #probably keep track of how many mobs are on screen\
+	var mob_count = $Mobs.get_child_count()
+	print("num mobs counted: " + str(mob_count))
+	var num_to_spawn = 1
+	if mob_count > max_enemies[num_axes-1]:
+		return
+	if mob_count < max_enemies[num_axes-1]*0.5:
+		num_to_spawn = 2
+	if mob_count < max_enemies[num_axes-1]*0.25:
+		num_to_spawn = 3
+	for i in range(num_to_spawn):
+		$MobPath/MobSpawnLocation.offset = rng.randi()
+		var type = decide_which_mob_type(num_axes)
+		spawn_mob($MobPath/MobSpawnLocation.position + $MobPath.position, type)
+
+func spawn_mob(pos, type):
 	var mob = Mob.instance()
-	add_child(mob)
-	mob.start(decide_which_mob_type(1))
-	# Set the mob's position to a random location.
-	mob.position = $MobPath/MobSpawnLocation.position
+	$Mobs.add_child(mob)
+	mob.start(type)
+	mob.position = pos
 
 func decide_which_mob_type(num_axes):
 	var max_elem = 2
@@ -52,5 +79,7 @@ func decide_which_mob_type(num_axes):
 
 func _on_Mob_defeated():
 	score += 1
-	print("score is " + str(score))
-	pass # Replace with function body.
+	if score == score_to_advance:
+		num_axes += 1
+	emit_signal("score", score)
+#	print("score is " + str(score))

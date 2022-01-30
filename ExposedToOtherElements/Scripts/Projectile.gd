@@ -19,21 +19,19 @@ func start(pos, dir, vel, type, dmg):
 	linear_velocity = Vector2(vel, 0)
 	linear_velocity = linear_velocity.rotated(dir.angle())
 	element_type = type
-	match(type):
-		Elements.type.FIRE:
-			$AnimatedSprite.modulate = Color.crimson
-		Elements.type.WATER:
-			$AnimatedSprite.modulate = Color.aqua
-		Elements.type.AIR:
-			$AnimatedSprite.modulate = Color.gray
-		Elements.type.EARTH:
-			$AnimatedSprite.modulate = Color.chocolate
+	$AnimatedSprite.modulate = Elements.color[type]
 	damage = dmg
 
 func _on_VisibilityNotifier2D_screen_exited():
 	queue_free()
 
-func destroy():
+func destroy(dealt_damage):
+	linear_velocity = Vector2(0,0)
+	$CollisionShape2D.disabled = true
+	if dealt_damage:
+		$AnimatedSprite.play("explode")
+	else:
+		$AnimatedSprite.play("ignored")
+	yield($AnimatedSprite, "animation_finished")
 	hide()
-	$CollisionShape2D.disabled
 	queue_free()
