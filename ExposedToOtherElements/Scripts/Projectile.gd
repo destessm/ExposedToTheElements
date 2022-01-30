@@ -52,7 +52,7 @@ func destroy(dealt_damage):
 		$AnimatedSprite.play("ignored")
 		play_sound(sound_names.PLINK)
 	yield($AnimatedSprite, "animation_finished")
-	yield($AudioStreamPlayer,"finished") #?
+#	yield($AudioStreamPlayer,"finished") #?
 	hide()
 	queue_free()
 
