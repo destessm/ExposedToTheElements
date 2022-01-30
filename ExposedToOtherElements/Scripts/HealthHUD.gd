@@ -24,7 +24,14 @@ func _ready():
 	hearts.append($HeartTexture8)
 	hearts.append($HeartTexture9)
 	hearts.append($HeartTexture10)
-	pass # Replace with function body.
+
+func hide_all():
+	for img in hearts:
+		img.hide()
+
+func show_all():
+	for img in hearts:
+		img.show()
 
 func set_heart_number(idx, val):
 	var heart_texture

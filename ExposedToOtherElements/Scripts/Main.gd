@@ -1,6 +1,7 @@
 extends Node
 
 signal score(value)
+signal show_start_screen
 
 export (PackedScene) var Mob
 export var score_to_advance = 10
@@ -8,21 +9,39 @@ var max_enemies = [6,10,14,18]
 var score
 var rng = RandomNumberGenerator.new()
 var num_axes
+#var player_has_died
 
 func _ready():
+#	player_has_died = false
 	rng.randomize()
-	new_game()
+	emit_signal("show_start_screen")
+	$Player.hide()
+	$HUD/ScoreHUD.hide_all()
+	$HUD/HealthHUD.hide_all()
+	$AudioStreamPlayer.play()
+#	new_game()
 
 func _on_Player_killed():
 	$MobTimer.stop()
+#	player_has_died = true
+	$AudioStreamPlayer.stop()
 	for pickup in $Pickups.get_children():
 		pickup.destroy()
 	for projectile in $Projectiles.get_children():
 		projectile.destroy(false)
 	for mob in $Mobs.get_children():
 		mob.destroy(false)
+	yield($Player/AnimatedSprite, "animation_finished")
+	yield(get_tree().create_timer(1.5),"timeout")
+	emit_signal("show_start_screen")
+#	if player_has_died:
+	$AudioStreamPlayer.play()
 	
 func new_game():
+	$Player.show()
+	$HUD.show()
+	$HUD/ScoreHUD.show_all()
+	$HUD/HealthHUD.show_all()
 	score = 0
 	num_axes = 1
 	$Player.start($StartPosition.position)
@@ -31,6 +50,7 @@ func new_game():
 
 #func _input(event):
 #	if event.is_action("ui_accept"):
+#		new_game()
 #		$MobPath/MobSpawnLocation.offset = rng.randi()
 #		spawn_mob($MobPath/MobSpawnLocation.position, decide_which_mob_type(1))
 
@@ -45,9 +65,9 @@ func _on_MobTimer_timeout(): #probably keep track of how many mobs are on screen
 	if mob_count < max_enemies[num_axes-1]*0.25:
 		num_to_spawn = 3
 	for i in range(num_to_spawn):
-		$MobPath/MobSpawnLocation.offset = rng.randi()
+		$MobPath2/MobSpawnLocation.offset = rng.randi()
 		var type = decide_which_mob_type(num_axes)
-		spawn_mob($MobPath/MobSpawnLocation.position + $MobPath.position, type)
+		spawn_mob($MobPath2/MobSpawnLocation.position + $MobPath2.position, type)
 
 func spawn_mob(pos, type):
 	var mob = Mob.instance()
@@ -83,3 +103,7 @@ func _on_Mob_defeated():
 		num_axes += 1
 	emit_signal("score", score)
 #	print("score is " + str(score))
+
+
+func _on_StartScreen_start_game():
+	new_game()

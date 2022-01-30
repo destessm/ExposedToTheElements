@@ -7,6 +7,14 @@ export var speed = 400  # How fast the player will move (pixels/sec).
 export (PackedScene) var player_projectile
 var screen_size  # Size of the game window.
 
+const death_sound = preload("res://Sounds/death.wav")
+const pew_sounds = [
+	preload("res://Sounds/pew_0.wav"),
+	preload("res://Sounds/pew_1.wav"),
+	preload("res://Sounds/pew_2.wav"),
+	preload("res://Sounds/pew_3.wav"),
+]
+
 export var starting_health = 20
 var health
 var axis_fire_water
@@ -14,7 +22,6 @@ var axis_air_earth
 export var fire_interval_ms = 500 #ms
 var can_fire
 var time_last_fired
-var immunities
 var can_move
 
 func _ready():
@@ -30,10 +37,12 @@ func start(pos):
 	axis_air_earth = Elements.type.NONE
 	$ElementShield_1.hide()
 	$ElementShield_2.hide()
-	$ElementShield_1.modulate = Color.white
-	$ElementShield_2.modulate = Color.white
+	$ElementShield_1b.hide()
+	$ElementShield_2b.hide()
+	$ElementShield_1.self_modulate = Color.white
+	$ElementShield_2.self_modulate = Color.white
 	$CollisionShape2D.disabled = false
-	immunities = []
+	$AnimatedSprite.play("walk")
 
 func _process(delta):
 	if can_move:
@@ -101,11 +110,15 @@ func set_axis(type):
 	if type == Elements.type.FIRE or type == Elements.type.WATER:
 		axis_fire_water = type
 		$ElementShield_1.show()
-		$ElementShield_1.modulate = Elements.color[type]
+		$ElementShield_1b.show()
+		$ElementShield_1.self_modulate = Elements.color[type]
+		$ElementShield_1b.modulate = Elements.color[Elements.opposite[axis_fire_water]]
 	elif type == Elements.type.AIR or type == Elements.type.EARTH:
 		axis_air_earth = type
 		$ElementShield_2.show()
-		$ElementShield_2.modulate = Elements.color[type]
+		$ElementShield_2b.show()
+		$ElementShield_2.self_modulate = Elements.color[type]
+		$ElementShield_2b.modulate = Elements.color[Elements.opposite[axis_air_earth]]
 #	print("new axes are " + Elements.names[axis_fire_water] + " and " + Elements.names[axis_air_earth])
 
 func flip_axes():
@@ -119,8 +132,10 @@ func flip_axes():
 			axis_air_earth = Elements.type.EARTH
 		else:
 			axis_air_earth = Elements.type.AIR
-	$ElementShield_1.modulate = Elements.color[axis_fire_water]
-	$ElementShield_2.modulate = Elements.color[axis_air_earth]
+	$ElementShield_1.self_modulate = Elements.color[axis_fire_water]
+	$ElementShield_2.self_modulate = Elements.color[axis_air_earth]
+	$ElementShield_1b.modulate = Elements.color[Elements.opposite[axis_fire_water]]
+	$ElementShield_2b.modulate = Elements.color[Elements.opposite[axis_air_earth]]
 	print("new axes are " + Elements.names[axis_fire_water] + " and " + Elements.names[axis_air_earth])
 
 func _input(event):
@@ -131,9 +146,9 @@ func _input(event):
 		var nearest_pickup = find_nearest_pickup()
 		if nearest_pickup != null:
 			set_axis(nearest_pickup.element_type)
-			nearest_pickup.destroy()
-	if event.is_action_pressed("ui_select"):
-		flip_axes()
+			nearest_pickup.destroy(true)
+#	if event.is_action_pressed("ui_select"):
+#		flip_axes()
 
 func can_fire():
 	return can_move and OS.get_ticks_msec() > time_last_fired + fire_interval_ms
@@ -145,6 +160,8 @@ func fire():
 	projectile.start(projectile_start_pos, get_local_mouse_position(), 200, Elements.type.NONE, 1)
 	can_fire = false
 	time_last_fired = OS.get_ticks_msec()
+	$AudioStreamPlayer.stream = pew_sounds[randi()%pew_sounds.size()]
+	$AudioStreamPlayer.play()
 
 func _on_AimReticle_animation_finished():
 	if $AimReticle.animation == "click":
@@ -168,4 +185,5 @@ func check_if_dead():
 		emit_signal("killed")
 		can_move = false
 		$AnimatedSprite.play("death")
-		
+		$AudioStreamPlayer.stream = death_sound
+		$AudioStreamPlayer.play()

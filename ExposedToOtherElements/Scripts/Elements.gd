@@ -25,3 +25,11 @@ const names = {
 	type.AIR : "AIR",
 	type.EARTH : "EARTH",
 }
+
+const opposite = {
+	type.NONE : type.NONE,
+	type.FIRE : type.WATER,
+	type.WATER : type.FIRE,
+	type.AIR : type.EARTH,
+	type.EARTH : type.AIR,
+}

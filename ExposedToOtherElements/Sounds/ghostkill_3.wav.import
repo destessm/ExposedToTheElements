@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/ghostkill_3.wav-2420701018606212e13584cad634a82b.sample"
+
+[deps]
+
+source_file="res://Sounds/ghostkill_3.wav"
+dest_files=[ "res://.import/ghostkill_3.wav-2420701018606212e13584cad634a82b.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

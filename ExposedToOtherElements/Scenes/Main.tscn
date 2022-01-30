@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Scripts/Main.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=2]
@@ -6,10 +6,17 @@
 [ext_resource path="res://Sprites/tilesets/1bit_tileset.tres" type="TileSet" id=4]
 [ext_resource path="res://Scenes/ScoreHUD.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Scenes/HealthHUD.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Scenes/StartScreen.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Sounds/music_loop.wav" type="AudioStream" id=8]
 
 [sub_resource type="Curve2D" id=1]
 _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, 3.33914, 0, 0, 0, 0, 0, 217.044, 0, 0, 0, 0, 0, 217.044, 280.548, 0, 0, 0, 0, 3.33914, 280.548, 0, 0, 0, 0, 3.33914, 0 )
+}
+
+[sub_resource type="Curve2D" id=2]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1000, 0, 0, 0, 0, 0, 1016, 408, 0, 0, 0, 0, 0, 408, 0, 0, 0, 0, 0, 0 )
 }
 
 [node name="Main" type="Node"]
@@ -34,6 +41,7 @@ tile_data = PoolIntArray( 0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 
 position = Vector2( 573, 297 )
 
 [node name="MobPath" type="Path2D" parent="."]
+visible = false
 position = Vector2( 58.6249, 136 )
 scale = Vector2( 4.00552, 1.19766 )
 curve = SubResource( 1 )
@@ -47,18 +55,38 @@ position = Vector2( 3.33914, 0 )
 
 [node name="Projectiles" type="Node" parent="."]
 
-[node name="Control" type="Control" parent="."]
+[node name="HUD" type="Control" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ScoreHUD" parent="Control" instance=ExtResource( 5 )]
+[node name="ScoreHUD" parent="HUD" instance=ExtResource( 5 )]
 
-[node name="HealthHUD" parent="Control" instance=ExtResource( 6 )]
+[node name="HealthHUD" parent="HUD" instance=ExtResource( 6 )]
 
-[connection signal="score" from="." to="Control/ScoreHUD" method="_on_Main_score"]
+[node name="StartScreenCtrl" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartScreen" parent="StartScreenCtrl" instance=ExtResource( 7 )]
+
+[node name="MobPath2" type="Path2D" parent="."]
+position = Vector2( 72, 104 )
+curve = SubResource( 2 )
+
+[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath2"]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 8 )
+
+[connection signal="score" from="." to="HUD/ScoreHUD" method="_on_Main_score"]
+[connection signal="show_start_screen" from="." to="StartScreenCtrl/StartScreen" method="_on_Main_show_start_screen"]
 [connection signal="killed" from="Player" to="." method="_on_Player_killed"]
-[connection signal="player_health" from="Player" to="Control/HealthHUD" method="_on_Player_player_health"]
+[connection signal="player_health" from="Player" to="HUD/HealthHUD" method="_on_Player_player_health"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_MobTimer_timeout"]
+[connection signal="start_game" from="StartScreenCtrl/StartScreen" to="." method="_on_StartScreen_start_game"]

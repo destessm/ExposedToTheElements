@@ -38,7 +38,9 @@ func _on_Timer_timeout():
 	can_be_picked_up = false
 	queue_free()
 
-func destroy():
+func destroy(was_picked_up=false):
 	can_be_picked_up = false
+	$AudioStreamPlayer.play()
 	hide()
+	yield($AudioStreamPlayer, "finished")
 	queue_free()

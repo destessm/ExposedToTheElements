@@ -29,12 +29,16 @@ Order of operations:
 ---------------------------------------------------------------------------
 
 list of TODOs as of Saturday night:
- [ ] AI spawn placement
- [ ] start and end screens (and game restarting)
+ [X] AI spawn placement
+ [X] AI shooting modifications
+ [~] UI for elemental axes
+ [X] start and end screens (and game restarting)
  [ ] sfx
  [ ] music
  [ ] export to html5
  ---
 stretch goals
  [ ] AI movement
- [ ] screen resolution (will it resize okay?)
+ [X] screen resolution (will it resize okay?)
+ [ ] High-score?
+ [X] remove "swap axis" button, made drops happen from all mobs that don't match your immunities
